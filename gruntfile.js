@@ -8,7 +8,8 @@ module.exports = function(grunt) {
   //require('load-grunt-tasks')(grunt);
   require('jit-grunt')(grunt,{
     'bump-only':'grunt-bump',
-    'bump-commit':'grunt-bump'
+    'bump-commit': 'grunt-bump',
+    'saucelabs-qunit': 'grunt-saucelabs'
   });
 
   // Project configuration.
@@ -31,8 +32,39 @@ module.exports = function(grunt) {
         ' *  License: MIT\n */\n'
     },
 
+    connect: {
+      server: {
+        options: {
+          base: '',
+          port: 9999
+        }
+      }
+    },
+
     qunit: {
       files: ['test/*.html']
+    },
+
+    'saucelabs-qunit': {
+      all: {
+        options: {
+          browsers: [
+            'XP',
+            'chrome',
+            ''
+          ],
+          build: process.env.TRAVIS_JOB_ID ? process.env.TRAVIS_JOB_ID : 0,
+          concurrency: 3,
+          tags: [
+            process.env.TRAVIS_BRANCH ? process.env.TRAVIS_BRANCH : 'local'
+          ],
+          testname: 'QUnit tests',
+          tunnelTimeout: 5,
+          urls: [
+            'http://127.0.0.1:<%= connect.server.options.port %>/test/close.html'
+          ]
+        }
+      }
     },
 
     jshint: {
@@ -129,6 +161,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['notest','qunit']);
   grunt.registerTask('notest',  ['jsonlint','jshint','uglify']);
   grunt.registerTask('test',    ['jshint','qunit']);
+  grunt.registerTask('test-cloud', ['jshint', 'connect', 'saucelabs-qunit']);
 
   grunt.registerTask('postBump',['uglify','bump-commit','shell']);
   grunt.registerTask('patch',   ['default','bump-only:patch','postBump']);
