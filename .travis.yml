@@ -1,5 +1,13 @@
 language: node_js
 node_js:
-  - "0.11"
+- '0.11'
+addons:
+  sauce_connect: true
+env:
+  global:
+  - secure: Nx3hKyburvV0QttGPESxNhQfnqCen8Is+qsiXiNrHoU89D6uRSwfo+4I1hZtgWwH95AoOjM/HMuBCs4/okwk0sgKXJdOaC08ZyU2LNyukyuuxyNSLtYkWFYC15QdmTB7XJkcbpukAvIwgs6Gu1MWZ0t2FwHcaMvMHuTTS2zSjfs=
+  - secure: Vb1WxBDvnKvuDJxV/kSL90xfwRHfpEJncEpXtSlxgGCLECVLuANOfGIhLMuZeQqvMLa1w7go6nddFMiUrohOQNUxDQfu6e+exC8IaImgBd489ArP9rwaVJK8CdDnFI2MDKpcAEoxCmoY4wd3i3pEITNcxzLPlZniu6O848SGgiM=
 before_script:
-  - npm install -g grunt-cli
+- npm install -g grunt-cli
+script:
+- grunt test-cloud
